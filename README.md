@@ -21,7 +21,7 @@ difficulties in communication, social interaction, and limited and repetitive pa
 in an individual's behaviors, interests and activities. Autism
 represents a very complex syndrome, in most cases of a
 genetic , and because its manifestations are very varied and can differ
-considerably from subject to subject, it is more appropriate to speak of "autism spectrum."
-the application developed
+considerably from subject to subject, it is more appropriate to speak of "autism spectrum".
+The application developed
 for this thesis work for training patients with spectrum disorders
 autism spectrum disorders (ASD) involves the use of the humanoid robot Pepper from SoftBank Robotics.*
