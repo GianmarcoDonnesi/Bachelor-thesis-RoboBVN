@@ -8,7 +8,8 @@ This repository contains my bachelor's thesis entitled:
 
 **Author**: Gianmarco Donnesi  
 **University**: Università degli Studi di Napoli 'Parthenope'  
-**Bachelor of**: Computer Science
+**Bachelor in**: Computer Science
+
 **Language**: Italian  
 **Software repository**: https://github.com/GianmarcoDonnesi/RoboBVN-Pepper
 
