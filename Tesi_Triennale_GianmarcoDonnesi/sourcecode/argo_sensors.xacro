@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Mount a camera -->
+  <xacro:default_camera namespace="${namespace}" parent_link="${namespace}/base_link" suffix="">
+    <origin xyz="0.55 0.0025 0.12" rpy="0 0 0" />
+  </xacro:default_camera>
+
+  <!-- Mount a GPS. -->
+  <xacro:default_gps namespace="${namespace}" parent_link="${namespace}/base_link" />
+
+  <!-- Mount a Pose 3D sensor. -->
+  <xacro:default_pose_3d_macro namespace="${namespace}" parent_link="${namespace}/base_link" inertial_reference_frame="${inertial_reference_frame}" />
+
+  <xacro:macro name="argo_multibeam_sonar" params="namespace suffix parent_link topic mass update_rate
+  samples fov range_min range_max range_stddev mesh
+  *inertia *origin *visual">
+    <!-- Sensor link -->
+    <link name="${namespace}/sonar${suffix}_link">
+      <inertial>
+        <xacro:insert_block name="inertia" />
+        <mass value="${mass}" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </inertial>
+
+      <xacro:insert_block name="visual" />
+      <xacro:no_collision />
+    </link>
+
+    <joint name="${namespace}_sonar${suffix}_joint" type="revolute">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent_link}" />
+      <child link="${namespace}/sonar${suffix}_link" />
+      <limit upper="0" lower="0" effort="0" velocity="0" />
+      <axis xyz="1 0 0" />
+    </joint>
+
+    <gazebo reference="${namespace}/sonar${suffix}_link">
+      <sensor type="ray" name="sonar${suffix}">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>true</visualize>
+        <update_rate>${update_rate}</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>${samples}</samples>
+              <resolution>1</resolution>
+              <min_angle>-${0.5*fov}</min_angle>
+              <max_angle>${0.5*fov}</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>${range_min}</min>
+            <max>${range_max}</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>${range_stddev}</stddev>
+          </noise>
+        </ray>
+        <plugin name="sonar${suffix}_controller" filename="libgazebo_ros_laser.so">
+          <topicName>${topic}</topicName>
+          <frameName>sonar${suffix}_link</frameName>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- Side scan sonar -->
+  <xacro:macro name="argo_sidescan_sonar" params="namespace parent_link suffix *origin">
+    <xacro:argo_multibeam_sonar namespace="${namespace}" suffix="${suffix}" parent_link="${parent_link}" topic="sss_${suffix}" mass="0.015" update_rate="2" samples="100" fov="${pi/3.0}" range_min="1.0" range_max="250.0" range_stddev="0.027" mesh="">
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
+      <xacro:insert_block name="origin" />
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.001 0.001 0.001" />
+        </geometry>
+      </visual>
+    </xacro:argo_multibeam_sonar>
+  </xacro:macro>
+
+  <!-- Side scan sonar left -->
+  <xacro:argo_sidescan_sonar namespace="${namespace}" parent_link="${namespace}/base_link" suffix="left">
+    <origin xyz="0.41225 0.1498 -0.04615" rpy="${0.5*pi} ${-5*d2r+pi/3.0} ${0.5*pi}" />
+  </xacro:argo_sidescan_sonar>
+
+  <!-- Side scan sonar right -->
+  <xacro:argo_sidescan_sonar namespace="${namespace}" parent_link="${namespace}/base_link" suffix="right">
+    <origin xyz="0.41225 -0.1498 -0.04615" rpy="${0.5*pi} ${-5*d2r+pi/3.0} ${-0.5*pi}" />
+  </xacro:argo_sidescan_sonar>
+
+  <xacro:macro name="forward_multibeam_p900_custom" params="namespace parent_link *origin">
+    <xacro:argo_multibeam_sonar namespace="${namespace}" suffix="" parent_link="${parent_link}" topic="sonar" mass="0.02" update_rate="100" samples="720" fov="4" range_min="0.5" range_max="5.6" range_stddev="0.01" mesh="">
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
+      <xacro:insert_block name="origin" />
+      <visual>
+        <geometry>
+          <mesh filename="file://$(find robot-lab)/meshes/p900.dae" scale="1 1 1" />
+        </geometry>
+      </visual>
+    </xacro:argo_multibeam_sonar>
+  </xacro:macro>
+
+  <xacro:forward_multibeam_p900_custom namespace="${namespace}" parent_link="${namespace}/base_link">
+    <origin xyz="0.45 0.0025 0.19" rpy="0 0 0" />
+  </xacro:forward_multibeam_p900_custom>
+
+  <link name="${namespace}/depth_sounder">
+    <inertial>
+      <mass value="0.001" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <inertia ixx="0.000000017" ixy="0" ixz="0" iyy="0.000000017" iyz="0" izz="0.000000017" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://robot-lab/meshes/sonar.dae" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://robot-lab/meshes/sonar.dae" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="depth_soundert_joint" type="fixed">
+    <origin xyz="-0.15781 0 0" rpy="0 ${0.5*pi} 0" />
+    <parent link="${namespace}/base_link" />
+    <child link="${namespace}/depth_sounder" />
+  </joint>
+
+  <gazebo reference="${namespace}/depth_sounder">
+    <sensor type="ray" name="depth_sounder">
+      <pose>0 0 0 0 0 0</pose>
+      <update_rate>1</update_rate>
+      <visualize>true</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>3</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.03</min_angle>
+            <max_angle>0.03</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>3</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.03</min_angle>
+            <max_angle>0.03</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.55</min>
+          <max>120</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin filename="libgazebo_ros_range.so" name="gazebo_ros_range">
+        <gaussianNoise>0.005</gaussianNoise>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>1</updateRate>
+        <topicName>/depth_sounder_tp</topicName>
+        <frameName>${namespace}/depth_sounder</frameName>
+        <radiation>ultrasound</radiation>
+        <fov>0.06</fov>
+      </plugin>
+    </sensor>
+  </gazebo>
+</robot>

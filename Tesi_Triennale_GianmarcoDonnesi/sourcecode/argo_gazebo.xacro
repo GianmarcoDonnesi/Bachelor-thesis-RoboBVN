@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="cob" value="0 0 0.155" />
+  <xacro:property name="volume" value="0.2668" />
+  <xacro:property name="x_size" value="1.2" />
+  <xacro:property name="y_size" value="0.86" />
+  <xacro:property name="z_size" value="0.6" />
+
+  <xacro:macro name="argo_hydro_model" params="namespace">
+    <link name="${namespace}/base_link">
+      <neutrally_buoyant>0</neutrally_buoyant>
+      <volume>${volume}</volume>
+      <box>
+        <width>${y_size}</width>
+        <length>${x_size}</length>
+        <height>${z_size}</height>
+      </box>
+      <center_of_buoyancy>${cob}</center_of_buoyancy>
+      <hydrodynamic_model>
+        <type>fossen</type>
+        <added_mass>
+          1.7182 0 0 0 0 0
+          0 0 0 0 0 0
+          0 0 5.468 0 0 0
+          0 0 0 0 0 0
+          0 0 0 0 1.2481 0
+          0 0 0 0 0 0.4006
+        </added_mass>
+        <linear_damping>
+          -11.7391 -20 -31.8678 -25 -44.9085 -5
+        </linear_damping>
+        <quadratic_damping>
+          0 0 0 0 0 0
+        </quadratic_damping>
+      </hydrodynamic_model>
+    </link>
+  </xacro:macro>
+</robot>
