@@ -4,7 +4,7 @@ This repository contains my bachelor's thesis entitled:
 
 ## RoboBVN: Assistive Robot for people’s language predictive of the later emergence of ASD
 
-<img width="337" alt="Screenshot 2023-07-28 095427" src="https://github.com/GianmarcoDonnesi/Bachelor-thesis-RoboBVN/assets/91615472/3b19bcdf-226a-448c-8a11-7d0ad91073f6">
+![alt text](https://github.com/GianmarcoDonnesi/Bachelor-thesis-RoboBVN/blob/main/frontespizio.jpg?raw=true)
 
 **Author**: Gianmarco Donnesi  
 **University**: Università degli Studi di Napoli 'Parthenope'  
