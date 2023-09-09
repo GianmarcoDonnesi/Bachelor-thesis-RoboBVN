@@ -28,4 +28,5 @@ Specifically, two tests were made and implemented to be administered to patients
 
 1. Auditory Discrimination Test
 
-2. Tower of London Test*
+2. Tower of London Test (ToL)
+*
