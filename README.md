@@ -23,4 +23,9 @@ represents a very complex syndrome, in most cases of a
 genetic , and because its manifestations are very varied and can differ
 considerably from subject to subject, it is more appropriate to speak of "autism spectrum".
 The application developed
-for this thesis work for training patients with autism spectrum disorders (ASD) involves the use of the humanoid robot Pepper from SoftBank Robotics®.*
+for this thesis work for training patients with autism spectrum disorders (ASD) involves the use of the humanoid robot Pepper from SoftBank Robotics®.
+Specifically, two tests were made and implemented to be administered to patients with these disorders:
+
+1. Auditory Discrimination Test
+
+2. Tower of London Test*
